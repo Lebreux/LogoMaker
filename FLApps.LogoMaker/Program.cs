@@ -10,6 +10,8 @@ namespace FLApps.LogoMaker
     {
         static void Main(string[] args)
         {
+            var logo = new Logo(DateTime.Now.GetHashCode());
+            var bitmap = logo.ToBitmap();
         }
     }
 }
