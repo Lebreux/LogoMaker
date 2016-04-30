@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Numerics;
+using FLApps.LogoMaker;
 
 namespace FLApps
 {
@@ -18,18 +20,18 @@ namespace FLApps
 
         private static float POINTS_DIST = 1f;
 
-        private List<KeyValuePair<Libs.Vectors.Vector2i, Libs.Vectors.Vector2i>> _lines;
+        private List<KeyValuePair<Vector2, Vector2>> _lines;
         private List<KeyValuePair<int, int>> _lineRadiuses;
-
+        
         public Logo(int seed)
         {
             var rand = new Random(seed);
-
-            this._lines = new List<KeyValuePair<Libs.Vectors.Vector2i, Libs.Vectors.Vector2i>>();
+            
+            this._lines = new List<KeyValuePair<Vector2, Vector2>>();
             for (int i = 0; i < rand.Next(Logo.MIN_LINES, Logo.MAX_LINES + 1); i++)
-                this._lines.Add(new KeyValuePair<Libs.Vectors.Vector2i, Libs.Vectors.Vector2i>(
-                    new Libs.Vectors.Vector2i(rand.Next(), rand.Next()),
-                    new Libs.Vectors.Vector2i(rand.Next(), rand.Next())
+                this._lines.Add(new KeyValuePair<Vector2, Vector2>(
+                    new Vector2(rand.Next(), rand.Next()),
+                    new Vector2(rand.Next(), rand.Next())
                 ));
             this._lineRadiuses = new List<KeyValuePair<int, int>>();
             foreach (var item in this._lines)
@@ -43,9 +45,9 @@ namespace FLApps
                 int currentLines = this._lines.Count;
                 for (int i = 0; i < currentLines; i++)
                 {
-                    this._lines.Add(new KeyValuePair<Libs.Vectors.Vector2i, Libs.Vectors.Vector2i>(
-                        new Libs.Vectors.Vector2i(this._lines[i].Key.X, int.MaxValue - this._lines[i].Key.Y),
-                        new Libs.Vectors.Vector2i(this._lines[i].Value.X, int.MaxValue - this._lines[i].Value.Y)
+                    this._lines.Add(new KeyValuePair<Vector2, Vector2>(
+                        new Vector2(this._lines[i].Key.X, int.MaxValue - this._lines[i].Key.Y),
+                        new Vector2(this._lines[i].Value.X, int.MaxValue - this._lines[i].Value.Y)
                     ));
                     this._lineRadiuses.Add(this._lineRadiuses[i]);
                 }
@@ -55,9 +57,9 @@ namespace FLApps
                 int currentLines = this._lines.Count;
                 for (int i = 0; i < currentLines; i++)
                 {
-                    this._lines.Add(new KeyValuePair<Libs.Vectors.Vector2i, Libs.Vectors.Vector2i>(
-                        new Libs.Vectors.Vector2i(int.MaxValue - this._lines[i].Key.X, this._lines[i].Key.Y),
-                        new Libs.Vectors.Vector2i(int.MaxValue - this._lines[i].Value.X, this._lines[i].Value.Y)
+                    this._lines.Add(new KeyValuePair<Vector2, Vector2>(
+                        new Vector2(int.MaxValue - this._lines[i].Key.X, this._lines[i].Key.Y),
+                        new Vector2(int.MaxValue - this._lines[i].Value.X, this._lines[i].Value.Y)
                     ));
                     this._lineRadiuses.Add(this._lineRadiuses[i]);
                 }
@@ -83,8 +85,8 @@ namespace FLApps
                     float y1 = (float)kvp.Key.Y / (float)int.MaxValue * (float)Logo.FINAL_HEIGHT;
                     float x2 = (float)kvp.Value.X / (float)int.MaxValue * (float)Logo.FINAL_WIDTH;
                     float y2 = (float)kvp.Value.Y / (float)int.MaxValue * (float)Logo.FINAL_HEIGHT;
-                    Libs.Vectors.Vector2<float> offset = new Libs.Vectors.Vector2f(x2 - x1, y2 - y1).Normalized().MultipleScalar(Logo.POINTS_DIST);
-                    Libs.Vectors.Vector2<float> pos = new Libs.Vectors.Vector2f(x1, y1);
+                    Vector2 offset = new Vector2(x2 - x1, y2 - y1).Normalized().MultipleScalar(Logo.POINTS_DIST);
+                    Vector2 pos = new Vector2(x1, y1);
                     int steps = (int)((x2 - x1) / offset.X);
                     KeyValuePair<int,int> lineRadius = this._lineRadiuses[radiusKey];
                     for (int i = 0; i < steps; i++)
